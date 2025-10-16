@@ -4,14 +4,20 @@
 	"version": "1.0.0",
 	"description": "Linkup MCP server for web search",
 	"module": "./src/index.ts",
+	"main": "./dist/index.cjs",
 	"type": "module",
 	"scripts": {
 		"dev": "npx smithery dev",
 		"build": "npx smithery build",
+		"build:stdio": "smithery build src/index.ts --transport stdio -o dist/index.cjs",
+		"start": "npm run start:http",
+		"start:http": "node .smithery/index.cjs",
+		"start:stdio": "SERVER_TRANSPORT=stdio node dist/index.cjs",
 		"lint": "biome check",
 		"lint:fix": "biome check --write --unsafe",
 		"prepare": "husky",
-		"prune": "knip"
+		"prune": "knip",
+		"inspector": "npx @modelcontextprotocol/inspector node dist/index.cjs"
 	},
 	"keywords": [
 		"mcp",
@@ -23,6 +29,12 @@
 		"search",
 		"ai",
 		"linkedin"
+	],
+	"bin": {
+		"linkup-mcp-server": "dist/index.cjs"
+	},
+	"files": [
+		"dist"
 	],
 	"homepage": "https://github.com/LinkupPlatform/linkup-mcp-server#readme",
 	"license": "MIT",
