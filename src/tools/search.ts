@@ -8,13 +8,13 @@ export function registerSearchTool(server: McpServer, config: Config) {
     'linkup-search',
     {
       description:
-        'Search the web in real time using Linkup. Use this tool whenever the user needs trusted facts, news, source-backed information or any other information that is not available in the knowledge base. Returns comprehensive content from the most relevant sources.',
+        'Search the web in real time using Linkup to retrieve current information, facts, and news from trusted sources. Use this tool for: real-time data (weather, stocks, sports scores, events), breaking news, current events, recent research, product information, up-to-date prices, schedules, and any information not available in your knowledge base. Returns comprehensive content from the most relevant sources.',
       inputSchema: {
         depth: z
           .enum(['standard', 'deep'])
           .default('standard')
           .describe(
-            'The search depth to perform. Use "standard" for queries with likely direct answers. Use "deep" for complex queries requiring comprehensive analysis or multi-hop questions',
+            'The search depth to perform. Use "standard" for queries with direct answers, "deep" for complex research requiring analysis across multiple sources.',
           ),
         query: z
           .string()

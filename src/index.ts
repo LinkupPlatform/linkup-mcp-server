@@ -2,7 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { registerSearchTool } from './tools/search';
 
-const configSchema = z.object({
+export const configSchema = z.object({
   apiKey: z.string().describe('API key for the Linkup API'),
 });
 
