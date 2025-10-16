@@ -1,6 +1,12 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { Config } from './config';
+import { z } from 'zod';
 import { registerSearchTool } from './tools/search';
+
+const configSchema = z.object({
+  apiKey: z.string().describe('API key for the Linkup API'),
+});
+
+export type Config = z.infer<typeof configSchema>;
 
 export default function createServer({ config }: { config: Config }) {
   const server = new McpServer(

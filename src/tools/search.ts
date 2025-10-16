@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { LinkupClient } from 'linkup-sdk';
 import { z } from 'zod';
-import type { Config } from '../config';
+import type { Config } from '../index';
 
 export function registerSearchTool(server: McpServer, config: Config) {
   server.registerTool(
