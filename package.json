@@ -1,0 +1,49 @@
+{
+	"name": "linkup-mcp-server",
+	"author": "Linkup",
+	"version": "1.0.0",
+	"description": "Linkup MCP server for web search",
+	"module": "./src/index.ts",
+	"type": "module",
+	"scripts": {
+		"dev": "npx smithery dev",
+		"build": "npx smithery build",
+		"lint": "biome check",
+		"lint:fix": "biome check --write --unsafe",
+		"prepare": "husky",
+		"prune": "knip"
+	},
+	"keywords": [
+		"mcp",
+		"search mcp",
+		"modelcontextprotocol",
+		"linkup",
+		"workflow",
+		"websearch",
+		"search",
+		"ai",
+		"linkedin"
+	],
+	"homepage": "https://github.com/LinkupPlatform/linkup-mcp-server#readme",
+	"license": "MIT",
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.18.2",
+		"linkup-sdk": "^2.4.1",
+		"zod": "^3.25.46"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.6",
+		"@smithery/cli": "^1.4.6",
+		"@types/node": "^24.8.0",
+		"husky": "^9.1.7",
+		"knip": "^5.65.0",
+		"typescript": "^5.9.3"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LinkupPlatform/linkup-mcp-server.git"
+	}
+}
