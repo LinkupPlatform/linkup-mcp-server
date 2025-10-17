@@ -1,5 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { registerFetchTool } from './tools/fetch';
 import { registerSearchTool } from './tools/search';
 
 export const configSchema = z.object({
@@ -21,6 +22,6 @@ export default function createServer({ config }: { config: Config }) {
   );
 
   registerSearchTool(server, config);
-
+  registerFetchTool(server, config);
   return server.server;
 }

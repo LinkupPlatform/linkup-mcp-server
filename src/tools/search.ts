@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { LinkupClient } from 'linkup-sdk';
 import { z } from 'zod';
+import { safeExecuteLinkupMethod } from '../client';
 import type { Config } from '../index';
 
 export function registerSearchTool(server: McpServer, config: Config) {
@@ -25,12 +25,8 @@ export function registerSearchTool(server: McpServer, config: Config) {
       title: 'Linkup web search',
     },
     async ({ query, depth }) => {
-      try {
-        const linkupClient = new LinkupClient({
-          apiKey: config.apiKey,
-          baseUrl: process.env.LINKUP_BASE_URL,
-        });
-        const results = await linkupClient.search({
+      return safeExecuteLinkupMethod(config.apiKey, async client => {
+        const results = await client.search({
           depth,
           outputType: 'searchResults',
           query,
@@ -40,20 +36,11 @@ export function registerSearchTool(server: McpServer, config: Config) {
           content: [
             {
               text: JSON.stringify(results, null, 2),
-              type: 'text',
+              type: 'text' as const,
             },
           ],
         };
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-
-        return {
-          content: [
-            { text: `An error occured while performing the search: ${errorMessage}`, type: 'text' },
-          ],
-          isError: true,
-        };
-      }
+      });
     },
   );
 }

@@ -2,16 +2,18 @@
 
 [![smithery badge](https://smithery.ai/badge/@LinkupPlatform/linkup-mcp-server)](https://smithery.ai/server/@LinkupPlatform/linkup-mcp-server)
 
-A Model Context Protocol (MCP) server that provides web search capabilities through [Linkup's](https://www.linkup.so/) advanced search API. This server enables AI assistants like Claude to perform intelligent web searches with natural language queries, accessing real-time information from trusted sources across the web.
+A Model Context Protocol (MCP) server that provides web search and page fetching capabilities through [Linkup's](https://www.linkup.so/) advanced API. This server enables AI assistants like Claude to perform intelligent web searches with natural language queries and fetch content from any webpage, accessing real-time information from trusted sources across the web.
 
 ## Features
 
 - 🔍 **Real-time Web Search**: Search the web for current information, news, and data
+- 🌐 **Page Fetching**: Fetch and extract content from any webpage
 - 🎯 **Natural Language Queries**: Use full questions for best results
 - 📊 **Flexible Search Depth**:
   - `standard` - For queries with direct answers
   - `deep` - For complex research requiring analysis across multiple sources
-- ⚡ **Fast**: Powered by Linkup's optimized search infrastructure
+- 🖥️ **JavaScript Rendering**: Optional JS rendering for dynamic content
+- ⚡ **Fast**: Powered by Linkup's optimized infrastructure
 
 ## Installation
 
@@ -111,13 +113,18 @@ You can also run the MCP server locally through the stdio transport.
 
 ## Usage
 
-Once configured, you can ask your AI agent to search the web for information:
+Once configured, you can ask your AI agent to search the web or fetch webpage content:
 
-**Examples:**
+**Search Examples:**
 - "Search the web for the latest news about AI developments"
 - "What's the current weather in Tokyo?"
 - "Find information about the new EU AI Act and how it affects startups"
 - "Search for the latest stock price of NVIDIA"
+
+**Fetch Examples:**
+- "Fetch the content from https://example.com/article"
+- "Get the content of this blog post: https://blog.example.com/post and make a summary of it"
+- "Fetch https://example.com with JavaScript rendering enabled"
 
 ### Search Depths
 
@@ -141,6 +148,20 @@ Search the web in real time using Linkup to retrieve current information, facts,
 - Product information and up-to-date prices
 - Schedules and availability
 - Any information not available in the AI's knowledge base
+
+### `linkup-fetch`
+
+Fetch and extract content from any webpage URL.
+
+**Parameters:**
+- `url` (required): The URL to fetch content from.
+- `renderJs` (optional): Whether to render JavaScript content (default: false). Enable this for dynamic pages that load content via JavaScript. Note: This makes the request slower.
+
+**Use cases:**
+- Retrieve page content for analysis or summarization
+- Extract article content from news sites
+- Get documentation from technical websites
+- Fetch blog posts and written content
 
 ## Development
 
