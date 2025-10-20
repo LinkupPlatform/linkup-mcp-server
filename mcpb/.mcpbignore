@@ -1,0 +1,17 @@
+biome.json
+smithery.yaml
+Dockerfile
+*.md
+*.ts
+LICENSE
+mcpb/*
+node_modules/*
+src/*
+.git/*
+.github/*
+.husky/*
+.vscode/*
+.smithery/*
+.gitignore
+.nvmrc
+package-lock.json
