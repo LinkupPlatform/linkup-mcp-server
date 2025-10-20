@@ -25,7 +25,7 @@ A Model Context Protocol (MCP) server that provides web search and page fetching
 1. Create a Linkup account for free at [app.linkup.so](https://app.linkup.so/)
 2. Copy the API key from your dashboard
 
-### Remote MCP Server
+### Remote MCP Server (recommended)
 
 You can access the MCP server directly through [Smithery](https://smithery.ai/server/@LinkupPlatform/linkup-mcp-server). From there, you'll be able to install the server into your favorite MCP compatible client. The remote MCP server is using the Streamable HTTP transport.
 
@@ -67,6 +67,20 @@ Add this to your VS Code MCP config file. See [VS Code MCP docs](https://code.vi
   }
 }
 ```
+
+### MCP Bundle (recommanded for Claude Desktop)
+
+Download the pre-built MCP bundle, a self-contained package that works across compatible MCP clients (like Claude Desktop for example). MCP Bundles are developed by Anthropics see [here](https://github.com/anthropics/mcpb?tab=readme-ov-file#mcp-bundles-mcpb) for more info.
+
+**Quick Download:**
+```bash
+curl -L -o linkup-mcp-server.mcpb https://github.com/LinkupPlatform/linkup-mcp-server/releases/latest/download/linkup-mcp-server.mcpb
+```
+
+**Installation:**
+1. Download `linkup-mcp-server.mcpb` from releases (or use the curl command above)
+2. Click on the file to install
+3. Configure your API key when prompted
 
 ### Local MCP Server
 

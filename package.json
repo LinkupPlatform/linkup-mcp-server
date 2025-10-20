@@ -1,7 +1,7 @@
 {
 	"name": "linkup-mcp-server",
 	"author": "Linkup",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "Linkup MCP server for web search",
 	"module": "./src/index.ts",
 	"main": "./dist/index.cjs",
@@ -17,7 +17,10 @@
 		"lint:fix": "biome check --write --unsafe",
 		"prepare": "husky",
 		"prune": "knip",
-		"inspector": "npx @modelcontextprotocol/inspector node dist/index.cjs"
+		"inspector": "npx @modelcontextprotocol/inspector node dist/index.cjs",
+		"build:mcpb": "bash mcpb/generate.sh",
+		"commitlint": "commitlint --edit",
+		"semantic-release": "semantic-release"
 	},
 	"keywords": [
 		"mcp",
@@ -45,10 +48,13 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.6",
+		"@commitlint/cli": "^20.1.0",
+		"@commitlint/config-conventional": "^20.0.0",
 		"@smithery/cli": "^1.4.6",
 		"@types/node": "^24.8.0",
 		"husky": "^9.1.7",
 		"knip": "^5.65.0",
+		"semantic-release": "^25.0.1",
 		"typescript": "^5.9.3"
 	},
 	"engines": {
@@ -57,5 +63,33 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/LinkupPlatform/linkup-mcp-server.git"
-	}
+	},
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "mcpb/linkup-mcp-server.mcpb",
+              "label": "MCPB Bundle"
+            }
+          ],
+          "failTitle": "The automated release is failing 🚨",
+          "failComment": false,
+          "labels": false,
+          "releasedLabels": false
+        }
+      ]
+    ]
+  },
+  "commitlint": {
+    "extends": ["@commitlint/config-conventional"]
+  }
 }

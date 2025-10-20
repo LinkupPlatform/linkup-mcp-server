@@ -1,0 +1,56 @@
+{
+  "manifest_version": "0.2",
+  "name": "linkup-mcp-server",
+  "version": "1.0.0",
+  "description": "Linkup MCP server for web search",
+  "author": {
+    "name": "Linkup"
+  },
+  "homepage": "https://www.linkup.so",
+  "documentation": "https://docs.linkup.so",
+  "icon": "public/logo.png",
+  "server": {
+    "type": "node",
+    "entry_point": "./dist/index.cjs",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/./dist/index.cjs",
+        "apiKey=${user_config.apiKey}"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "linkup-search",
+      "description": "Search the web in real time using Linkup to retrieve current information, facts, and news from trusted sources."
+    },
+    {
+      "name": "linkup-fetch",
+      "description": "Fetch and extract content from any webpage URL."
+    }
+  ],
+  "user_config": {
+    "apiKey": {
+      "type": "string",
+      "title": "Linkup API Key",
+      "description": "API Key needed to authenticate to Linkup's servers",
+      "required": true,
+      "sensitive": true
+    }
+  },
+  "keywords": [
+    "linkup",
+    "workflow",
+    "search",
+    "websearch",
+    "ai",
+    "linkedin"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LinkupPlatform/linkup-mcp-server.git"
+  }
+}
