@@ -1,0 +1,30 @@
+name: Publish to npm
+
+on:
+  push:
+    branches: main
+
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN_FOR_SEMANTIC_RELEASE }}
+
+jobs:
+  run-tests:
+    uses: ./.github/workflows/_run-tests.yaml
+
+  build-and-publish:
+    needs: run-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN_FOR_SEMANTIC_RELEASE }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.20.0'
+      - run: npm ci
+      - run: npm run build:stdio
+      - name: Build MCP Bundle
+        run: npm run build:mcpb
+      - run: npm run semantic-release

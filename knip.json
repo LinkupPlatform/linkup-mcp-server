@@ -1,0 +1,6 @@
+{
+  "ignoreDependencies": [
+    "@commitlint/cli",
+    "semantic-release"
+  ]
+}
