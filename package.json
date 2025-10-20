@@ -9,7 +9,8 @@
 	"scripts": {
 		"dev": "npx smithery dev",
 		"build": "npx smithery build",
-		"build:stdio": "smithery build src/index.ts --transport stdio -o dist/index.cjs",
+		"build:stdio": "smithery build src/index.ts --transport stdio -o dist/index.cjs && npm run add-shebang",
+		"add-shebang": "echo '#!/usr/bin/env node' | cat - dist/index.cjs > dist/index.cjs.tmp && mv dist/index.cjs.tmp dist/index.cjs && chmod +x dist/index.cjs",
 		"start": "npm run start:http",
 		"start:http": "node .smithery/index.cjs",
 		"start:stdio": "SERVER_TRANSPORT=stdio node dist/index.cjs",
