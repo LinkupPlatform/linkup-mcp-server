@@ -2,7 +2,7 @@ name: Publish to npm
 
 on:
   push:
-    branches: main
+    branches: [main]
 
 env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - uses: actions/setup-node@v4
         with:
-          node-version: '22.20.0'
+          node-version: "22.20.0"
       - run: npm ci
       - run: npm run build:stdio
       - name: Build MCP Bundle
