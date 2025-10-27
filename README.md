@@ -38,7 +38,8 @@ npx -y @smithery/cli@latest install linkup-mcp-server --client <CLIENT_NAME> --c
 **Finally, if your client supports OAuth protocol, you can reference directly the remote MCP server URL. See examples below:**
 
 #### Cursor
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=Linkup&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2VydmVyLnNtaXRoZXJ5LmFpL0BMaW5rdXBQbGF0Zm9ybS9saW5rdXAtbWNwLXNlcnZlci9tY3AifQ%3D%3D)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=linkup&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbWNwLmxpbmt1cC5zby9tY3A%2FYXBpS2V5PVlPVVJfQVBJX0tFWSJ9)
+
 
 In your `~/.cursor/mcp.json` file, add the following:
 ```json
@@ -47,7 +48,7 @@ In your `~/.cursor/mcp.json` file, add the following:
     // ... other MCP servers
     "linkup": {
       "type": "http",
-      "url": "https://server.smithery.ai/@LinkupPlatform/linkup-mcp-server/mcp"
+      "url": "https://mcp.linkup.so/mcp?apiKey=LINKUP_API_KEY"
     }
   }
 }
@@ -61,7 +62,7 @@ Add this to your VS Code MCP config file. See [VS Code MCP docs](https://code.vi
   "servers": {
     // ... other MCP servers
     "linkup": {
-      "url": "https://server.smithery.ai/@LinkupPlatform/linkup-mcp-server/mcp",
+      "url": "https://mcp.linkup.so/mcp?apiKey=LINKUP_API_KEY",
       "type": "http"
     }
   }
@@ -99,7 +100,7 @@ You can also run the MCP server locally through the stdio transport.
       "args": [
         "-y",
         "linkup-mcp-server",
-        "apiKey=<LINKUP_API_KEY>"
+        "apiKey=LINKUP_API_KEY"
       ]
     }
   }
@@ -118,7 +119,7 @@ You can also run the MCP server locally through the stdio transport.
       "args": [
         "-y",
         "linkup-mcp-server",
-        "apiKey=<LINKUP_API_KEY>"
+        "apiKey=LINKUP_API_KEY"
       ]
     }
   }
