@@ -4,7 +4,9 @@ import { registerFetchTool } from './tools/fetch';
 import { registerSearchTool } from './tools/search';
 
 export const configSchema = z.object({
-  apiKey: z.string().describe('API key for the Linkup API'),
+  apiKey: z
+    .string()
+    .describe('API key for the Linkup API. Get one from [here](https://app.linkup.so/home)'),
 });
 
 export type Config = z.infer<typeof configSchema>;

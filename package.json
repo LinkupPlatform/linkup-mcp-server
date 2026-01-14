@@ -9,7 +9,7 @@
 	"scripts": {
 		"dev": "npx smithery dev",
 		"build": "npx smithery build",
-		"build:stdio": "smithery build src/index.ts --transport stdio -o dist/index.cjs && npm run add-shebang",
+		"build:stdio": "smithery build src/index.ts --transport stdio -o dist && npm run add-shebang",
 		"add-shebang": "echo '#!/usr/bin/env node' | cat - dist/index.cjs > dist/index.cjs.tmp && mv dist/index.cjs.tmp dist/index.cjs && chmod +x dist/index.cjs",
 		"start": "npm run start:http",
 		"start:http": "node .smithery/index.cjs",
@@ -43,15 +43,15 @@
 	"homepage": "https://github.com/LinkupPlatform/linkup-mcp-server#readme",
 	"license": "MIT",
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.18.2",
+		"@modelcontextprotocol/sdk": "^1.25.2",
 		"linkup-sdk": "^2.4.1",
-		"zod": "^3.25.46"
+		"zod": "^4.3.5"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.6",
 		"@commitlint/cli": "^20.1.0",
 		"@commitlint/config-conventional": "^20.0.0",
-		"@smithery/cli": "^1.4.6",
+		"@smithery/cli": "^3.1.5",
 		"@types/node": "^24.8.0",
 		"husky": "^9.1.7",
 		"knip": "^5.65.0",
