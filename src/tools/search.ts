@@ -16,6 +16,12 @@ export function registerSearchTool(server: McpServer, config: Config) {
           .describe(
             'The search depth to perform. Use "standard" for queries with direct answers, "deep" for complex research requiring analysis across multiple sources.',
           ),
+        includeImages: z
+          .boolean()
+          .default(false)
+          .describe(
+            'Allows you to receive image results alongside text results in your search responses. When set to true, Linkup will return relevant images related to your query, each with a URL and metadata.',
+          ),
         query: z
           .string()
           .describe(
@@ -24,10 +30,11 @@ export function registerSearchTool(server: McpServer, config: Config) {
       },
       title: 'Linkup web search',
     },
-    async ({ query, depth }) => {
+    async ({ query, depth, includeImages }) => {
       return safeExecuteLinkupMethod(config.apiKey, async client => {
         const results = await client.search({
           depth,
+          includeImages,
           outputType: 'searchResults',
           query,
         });
