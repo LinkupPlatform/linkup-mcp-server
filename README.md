@@ -4,6 +4,10 @@
 
 A Model Context Protocol (MCP) server that provides web search and page fetching capabilities through [Linkup's](https://www.linkup.so/) advanced API. This server enables AI assistants like Claude to perform intelligent web searches with natural language queries and fetch content from any webpage, accessing real-time information from trusted sources across the web.
 
+<a href="https://glama.ai/mcp/servers/@LinkupPlatform/linkup-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@LinkupPlatform/linkup-mcp-server/badge" alt="Linkup Server MCP server" />
+</a>
+
 ## Features
 
 - 🔍 **Real-time Web Search**: Search the web for current information, news, and data
