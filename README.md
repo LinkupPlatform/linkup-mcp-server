@@ -1,7 +1,5 @@
 # Linkup MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@LinkupPlatform/linkup-mcp-server)](https://smithery.ai/server/@LinkupPlatform/linkup-mcp-server)
-
 A Model Context Protocol (MCP) server that provides web search and page fetching capabilities through [Linkup's](https://www.linkup.so/) advanced API. This server enables AI assistants like Claude to perform intelligent web searches with natural language queries and fetch content from any webpage, accessing real-time information from trusted sources across the web.
 
 ## Features
@@ -17,7 +15,7 @@ A Model Context Protocol (MCP) server that provides web search and page fetching
 
 ## Installation
 
-- Cursor, VSCode, Claude Code, or another MCP compatible client
+- Cursor, VSCode, Claude Code, Codex, or another MCP compatible client
 - Linkup API key
 
 ### Getting Your API Key
@@ -27,15 +25,9 @@ A Model Context Protocol (MCP) server that provides web search and page fetching
 
 ### Remote MCP Server (recommended)
 
-You can access the MCP server directly through [Smithery](https://smithery.ai/server/@LinkupPlatform/linkup-mcp-server). From there, you'll be able to install the server into your favorite MCP compatible client. The remote MCP server is using the Streamable HTTP transport.
+The hosted Linkup MCP server uses the Streamable HTTP transport. If your client supports remote HTTP MCP servers, you can reference the hosted endpoint directly.
 
-You can also use the Smithery CLI to install the server into your favorite MCP compatible client.
-```bash
-npx @smithery/cli login # If you haven't already
-npx -y @smithery/cli@latest install linkup-mcp-server --client <CLIENT_NAME> --config '{"apiKey":<LINKUP_API_KEY>}'
-```
-
-**Finally, if your client supports OAuth protocol, you can reference directly the remote MCP server URL. See examples below:**
+If your client supports custom HTTP headers, prefer sending your API key in `Authorization: Bearer LINKUP_API_KEY` instead of putting it in the URL. The `?apiKey=...` query parameter remains supported for clients that cannot send custom headers.
 
 #### Cursor
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=linkup&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbWNwLmxpbmt1cC5zby9tY3A%2FYXBpS2V5PVlPVVJfQVBJX0tFWSJ9)
@@ -69,9 +61,30 @@ Add this to your VS Code MCP config file. See [VS Code MCP docs](https://code.vi
 }
 ```
 
-### MCP Bundle (recommanded for Claude Desktop)
+#### Codex
 
-Download the pre-built MCP bundle, a self-contained package that works across compatible MCP clients (like Claude Desktop for example). MCP Bundles are developed by Anthropics see [here](https://github.com/anthropics/mcpb?tab=readme-ov-file#mcp-bundles-mcpb) for more info.
+Codex supports both remote HTTP MCP servers and custom HTTP headers via `config.toml`.
+
+Using a bearer token from the environment:
+
+```toml
+[mcp_servers.linkup]
+url = "https://mcp.linkup.so/mcp"
+bearer_token_env_var = "LINKUP_API_KEY"
+enabled = true
+```
+
+Or, if you prefer to keep using the query parameter:
+
+```toml
+[mcp_servers.linkup]
+url = "https://mcp.linkup.so/mcp?apiKey=LINKUP_API_KEY"
+enabled = true
+```
+
+### MCP Bundle (recommended for Claude Desktop)
+
+Download the pre-built MCP bundle, a self-contained package that works across compatible MCP clients such as Claude Desktop. MCP Bundles are developed by Anthropic. See the [MCP Bundles repository](https://github.com/anthropics/mcpb?tab=readme-ov-file#mcp-bundles-mcpb) for more information.
 
 **Quick Download:**
 ```bash
@@ -85,7 +98,7 @@ curl -L -o linkup-mcp-server.mcpb https://github.com/LinkupPlatform/linkup-mcp-s
 
 ### Local MCP Server
 
-You can also run the MCP server locally through the stdio transport.
+You can also run the MCP server locally over the `stdio` transport.
 
 #### Cursor
 
@@ -124,6 +137,15 @@ You can also run the MCP server locally through the stdio transport.
     }
   }
 }
+```
+
+#### Codex
+
+```toml
+[mcp_servers.linkup]
+command = "npx"
+args = ["-y", "linkup-mcp-server", "apiKey=LINKUP_API_KEY"]
+enabled = true
 ```
 
 ## Usage
@@ -182,7 +204,7 @@ Fetch and extract content from any webpage URL.
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
+- Node.js >= 22.0.0
 - npm
 
 ### Setup
@@ -192,23 +214,31 @@ Fetch and extract content from any webpage URL.
 npm install
 ```
 
-### Running with Smithery
+### Running the HTTP Server
 
 ```bash
 npm run dev
 ```
 
-### Running with stdio transport
+This starts the local Streamable HTTP server at `http://localhost:2121/mcp`.
+
+### Running with the stdio Transport
 ```bash
 npm run build:stdio
-npm run start:stdio apiKey=YOUR_API_KEY
+npm run start:stdio -- apiKey=YOUR_API_KEY
+```
+
+For local development, you can also pass the key via environment variable:
+
+```bash
+LINKUP_API_KEY=YOUR_API_KEY npm run start:stdio
 ```
 
 ### Testing with MCP Inspector
 
 ```bash
 npm run build:stdio
-npm run inspector apiKey=YOUR_API_KEY
+npm run inspector -- apiKey=YOUR_API_KEY
 ```
 
 This will open the MCP Inspector in your browser where you can test the search tool interactively.

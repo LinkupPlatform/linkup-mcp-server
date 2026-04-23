@@ -1,9 +1,8 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { safeExecuteLinkupMethod } from '../client';
-import type { Config } from '../index';
+import { safeExecuteLinkupMethod } from '../client.js';
 
-export function registerSearchTool(server: McpServer, config: Config) {
+export function registerSearchTool(server: McpServer, apiKey: string) {
   server.registerTool(
     'linkup-search',
     {
@@ -31,7 +30,7 @@ export function registerSearchTool(server: McpServer, config: Config) {
       title: 'Linkup web search',
     },
     async ({ query, depth, includeImages }) => {
-      return safeExecuteLinkupMethod(config.apiKey, async client => {
+      return safeExecuteLinkupMethod(apiKey, async client => {
         const results = await client.search({
           depth,
           includeImages,

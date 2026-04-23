@@ -2,7 +2,7 @@ name: Publish to npm
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -16,13 +16,13 @@ jobs:
     needs: run-tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: "22.20.0"
+          node-version: "24.14.0"
       - run: npm ci
       - run: npm run build:stdio
       - name: Build MCP Bundle

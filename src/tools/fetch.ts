@@ -1,9 +1,8 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { safeExecuteLinkupMethod } from '../client';
-import type { Config } from '../index';
+import { safeExecuteLinkupMethod } from '../client.js';
 
-export function registerFetchTool(server: McpServer, config: Config) {
+export function registerFetchTool(server: McpServer, apiKey: string) {
   server.registerTool(
     'linkup-fetch',
     {
@@ -33,7 +32,7 @@ export function registerFetchTool(server: McpServer, config: Config) {
       title: 'Linkup page fetch',
     },
     async ({ url, renderJs, includeRawHtml, extractImages }) => {
-      return safeExecuteLinkupMethod(config.apiKey, async client => {
+      return safeExecuteLinkupMethod(apiKey, async client => {
         const results = await client.fetch({
           extractImages,
           includeRawHtml,

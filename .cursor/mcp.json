@@ -1,0 +1,14 @@
+{
+    "mcpServers": {
+        "local": {
+            "url": "http://localhost:2121/mcp"
+        },
+        "local:stdio": {
+            "command": "node",
+            "args": [
+                "/Users/shedna42/Documents/Projects/linkup/linkup-mcp-server/dist/stdio.js",
+                "apiKey=YOUR_API_KEY"
+            ]
+        }
+    }
+}

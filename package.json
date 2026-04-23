@@ -1,24 +1,25 @@
 {
 	"name": "linkup-mcp-server",
 	"author": "Linkup",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"description": "Linkup MCP server for web search",
-	"module": "./src/index.ts",
-	"main": "./dist/index.cjs",
+	"main": "./dist/index.js",
 	"type": "module",
 	"scripts": {
-		"dev": "npx smithery dev",
-		"build": "npx smithery build",
-		"build:stdio": "smithery build src/index.ts --transport stdio -o dist && npm run add-shebang",
-		"add-shebang": "echo '#!/usr/bin/env node' | cat - dist/index.cjs > dist/index.cjs.tmp && mv dist/index.cjs.tmp dist/index.cjs && chmod +x dist/index.cjs",
-		"start": "npm run start:http",
-		"start:http": "node .smithery/index.cjs",
-		"start:stdio": "SERVER_TRANSPORT=stdio node dist/index.cjs",
+		"clean": "rm -rf dist",
+		"dev": "tsx watch src/index.ts",
+		"dev:stdio": "tsx src/stdio.ts",
+		"build": "npm run clean && tsc",
+		"build:stdio": "npm run build",
+		"start": "node dist/index.js",
+		"start:http": "node dist/index.js",
+		"start:stdio": "node dist/stdio.js",
 		"lint": "biome check",
 		"lint:fix": "biome check --write --unsafe",
-		"prepare": "husky",
+		"prepare": "node .husky/install.mjs",
+		"prepack": "npm run build",
 		"prune": "knip",
-		"inspector": "npx @modelcontextprotocol/inspector node dist/index.cjs",
+		"inspector": "npx @modelcontextprotocol/inspector node dist/stdio.js",
 		"build:mcpb": "bash mcpb/generate.sh",
 		"commitlint": "commitlint --edit",
 		"semantic-release": "semantic-release"
@@ -35,62 +36,67 @@
 		"linkedin"
 	],
 	"bin": {
-		"linkup-mcp-server": "dist/index.cjs"
+		"linkup-mcp-server": "bin/linkup-mcp-server.js"
 	},
 	"files": [
+		"bin",
 		"dist"
 	],
 	"homepage": "https://github.com/LinkupPlatform/linkup-mcp-server#readme",
 	"license": "MIT",
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.25.2",
+		"@modelcontextprotocol/sdk": "^1.28.0",
+		"express": "^5.2.1",
 		"linkup-sdk": "^2.4.1",
 		"zod": "^4.3.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.2.6",
+		"@biomejs/biome": "2.4.12",
 		"@commitlint/cli": "^20.1.0",
 		"@commitlint/config-conventional": "^20.0.0",
-		"@smithery/cli": "^3.1.5",
+		"@types/express": "^5.0.6",
 		"@types/node": "^24.8.0",
 		"husky": "^9.1.7",
 		"knip": "^5.65.0",
 		"semantic-release": "^25.0.1",
+		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
 	},
 	"engines": {
-		"node": ">=18.0.0"
+		"node": ">=24.0.0"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/LinkupPlatform/linkup-mcp-server.git"
 	},
-  "release": {
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/npm",
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            {
-              "path": "mcpb/linkup-mcp-server.mcpb",
-              "label": "MCPB Bundle"
-            }
-          ],
-          "failTitle": "The automated release is failing 🚨",
-          "failComment": false,
-          "labels": false,
-          "releasedLabels": false
-        }
-      ]
-    ]
-  },
-  "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
-  }
+	"release": {
+		"branches": [
+			"main"
+		],
+		"plugins": [
+			"@semantic-release/commit-analyzer",
+			"@semantic-release/release-notes-generator",
+			"@semantic-release/npm",
+			[
+				"@semantic-release/github",
+				{
+					"assets": [
+						{
+							"path": "mcpb/linkup-mcp-server.mcpb",
+							"label": "MCPB Bundle"
+						}
+					],
+					"failTitle": "The automated release is failing 🚨",
+					"failComment": false,
+					"labels": false,
+					"releasedLabels": false
+				}
+			]
+		]
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	}
 }

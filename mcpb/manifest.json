@@ -1,7 +1,7 @@
 {
-  "manifest_version": "0.2",
+  "manifest_version": "0.3",
   "name": "linkup-mcp-server",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Linkup MCP server for web search",
   "author": {
     "name": "Linkup"
@@ -11,11 +11,11 @@
   "icon": "public/logo.png",
   "server": {
     "type": "node",
-    "entry_point": "./dist/index.cjs",
+    "entry_point": "./dist/stdio.js",
     "mcp_config": {
       "command": "node",
       "args": [
-        "${__dirname}/./dist/index.cjs",
+        "${__dirname}/./dist/stdio.js",
         "apiKey=${user_config.apiKey}"
       ],
       "env": {}
