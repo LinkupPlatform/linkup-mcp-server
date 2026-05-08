@@ -15,27 +15,71 @@ export function registerSearchTool(server: McpServer, apiKey: string) {
           .describe(
             'The search depth to perform. Use "standard" for queries with direct answers, "deep" for complex research requiring analysis across multiple sources.',
           ),
+        excludeDomains: z
+          .array(z.string())
+          .optional()
+          .describe(
+            'A list of domains to exclude from search results, e.g. ["reddit.com", "quora.com"]. Results from these domains will be filtered out.',
+          ),
+        fromDate: z.iso
+          .date()
+          .optional()
+          .describe(
+            'Filter results to only include content published on or after this date. Format: YYYY-MM-DD.',
+          ),
+        includeDomains: z
+          .array(z.string())
+          .optional()
+          .describe(
+            'A list of domains to restrict search results to, e.g. ["bbc.com", "reuters.com"]. Only results from these domains will be returned. Max 100 domains.',
+          ),
         includeImages: z
           .boolean()
           .default(false)
           .describe(
             'Allows you to receive image results alongside text results in your search responses. When set to true, Linkup will return relevant images related to your query, each with a URL and metadata.',
           ),
+        maxResults: z
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .describe('Maximum number of results to return.'),
         query: z
           .string()
           .describe(
             'Natural language search query. Full questions work best, e.g., "How does the new EU AI Act affect startups?"',
           ),
+        toDate: z.iso
+          .date()
+          .optional()
+          .describe(
+            'Filter results to only include content published on or before this date. Format: YYYY-MM-DD.',
+          ),
       },
       title: 'Linkup web search',
     },
-    async ({ query, depth, includeImages }) => {
+    async ({
+      query,
+      depth,
+      includeImages,
+      includeDomains,
+      excludeDomains,
+      fromDate,
+      toDate,
+      maxResults,
+    }) => {
       return safeExecuteLinkupMethod(apiKey, async client => {
         const results = await client.search({
           depth,
+          excludeDomains,
+          fromDate: fromDate ? new Date(fromDate) : undefined,
+          includeDomains,
           includeImages,
+          maxResults,
           outputType: 'searchResults',
           query,
+          toDate: toDate ? new Date(toDate) : undefined,
         });
 
         return {
