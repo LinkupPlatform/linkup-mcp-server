@@ -10,7 +10,10 @@ A Model Context Protocol (MCP) server that provides web search and page fetching
 - 📊 **Flexible Search Depth**:
   - `standard` - For queries with direct answers
   - `deep` - For complex research requiring analysis across multiple sources
+- 🎯 **Result Filtering**: Restrict by domain (`includeDomains` / `excludeDomains`), date range (`fromDate` / `toDate`), and `maxResults`
+- 🖼️ **Image Results**: Optional `includeImages` for search and `extractImages` for fetch
 - 🖥️ **JavaScript Rendering**: Optional JS rendering for dynamic content
+- 📄 **Raw HTML**: Optional `includeRawHtml` for fetch when you need the unprocessed page
 - ⚡ **Fast**: Powered by Linkup's optimized infrastructure
 
 ## Installation
@@ -176,7 +179,13 @@ Search the web in real time using Linkup to retrieve current information, facts,
 
 **Parameters:**
 - `query` (required): Natural language search query. Full questions work best.
-- `depth` (optional): Search depth - "standard" (default) or "deep"
+- `depth` (optional): Search depth - `"standard"` (default) or `"deep"`.
+- `includeImages` (optional, default `false`): Return relevant images alongside text results, each with a URL and metadata.
+- `includeDomains` (optional): Array of domains to restrict results to, e.g. `["bbc.com", "reuters.com"]`. Max 100 domains.
+- `excludeDomains` (optional): Array of domains to exclude from results, e.g. `["reddit.com", "quora.com"]`.
+- `fromDate` (optional): Only include content published on or after this date. Format `YYYY-MM-DD`.
+- `toDate` (optional): Only include content published on or before this date. Format `YYYY-MM-DD`.
+- `maxResults` (optional): Maximum number of results to return (positive integer).
 
 **Use cases:**
 - Real-time data (weather, stocks, sports scores, events)
@@ -192,7 +201,9 @@ Fetch and extract content from any webpage URL.
 
 **Parameters:**
 - `url` (required): The URL to fetch content from.
-- `renderJs` (optional): Whether to render JavaScript content (default: false). Enable this for dynamic pages that load content via JavaScript. Note: This makes the request slower.
+- `renderJs` (optional, default `false`): Whether to render JavaScript content. Enable for dynamic pages that load content via JavaScript. Note: makes the request slower.
+- `extractImages` (optional, default `false`): Extract images found on the page and return them in a dedicated `images` field. Useful when you need a list of all images for further processing or analysis.
+- `includeRawHtml` (optional, default `false`): Include the page's raw HTML in a dedicated `rawHtml` field. Useful for custom HTML parsing, preserving specific formatting, or accessing elements that might be filtered out during standard content extraction.
 
 **Use cases:**
 - Retrieve page content for analysis or summarization
@@ -204,7 +215,7 @@ Fetch and extract content from any webpage URL.
 
 ### Prerequisites
 
-- Node.js >= 22.0.0
+- Node.js >= 24.0.0
 - npm
 
 ### Setup
