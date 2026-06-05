@@ -45,9 +45,9 @@
 	"homepage": "https://github.com/LinkupPlatform/linkup-mcp-server#readme",
 	"license": "MIT",
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.28.0",
+		"@modelcontextprotocol/sdk": "^1.29.0",
 		"express": "^5.2.1",
-		"linkup-sdk": "^2.7.0",
+		"linkup-sdk": "^3.2.4",
 		"zod": "^4.3.5"
 	},
 	"devDependencies": {
