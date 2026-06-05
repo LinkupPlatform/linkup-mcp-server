@@ -5,6 +5,7 @@ A Model Context Protocol (MCP) server that provides web search and page fetching
 ## Features
 
 - 🔍 **Real-time Web Search**: Search the web for current information, news, and data
+- 🧠 **Deep Research**: Start long-running, multi-source research tasks and poll for results
 - 🌐 **Page Fetching**: Fetch and extract content from any webpage
 - 🎯 **Natural Language Queries**: Use full questions for best results
 - 📊 **Flexible Search Depth**:
@@ -161,6 +162,12 @@ Once configured, you can ask your AI agent to search the web or fetch webpage co
 - "Find information about the new EU AI Act and how it affects startups"
 - "Search for the latest stock price of NVIDIA"
 
+**Research Examples:**
+- "Research the current state of the semiconductor market, covering key dynamics, major players, recent analyst sentiment, and the bull and bear cases"
+- "Do a deep research report on how the EU AI Act affects early-stage startups"
+
+Research is a long-running operation (typically 5-20 minutes). The agent starts a task with `linkup-research`, then polls `linkup-get-research` with the returned task `id` until the status is `completed` or `failed`.
+
 **Fetch Examples:**
 - "Fetch the content from https://example.com/article"
 - "Get the content of this blog post: https://blog.example.com/post and make a summary of it"
@@ -194,6 +201,38 @@ Search the web in real time using Linkup to retrieve current information, facts,
 - Product information and up-to-date prices
 - Schedules and availability
 - Any information not available in the AI's knowledge base
+
+### `linkup-research`
+
+Start a deep research task for complex, multi-source investigations that require analysis and synthesis. This is asynchronous and long-running (typically 5-20 minutes): it returns immediately with a task `id` and `status` rather than the final result. Use `linkup-get-research` to poll for completion.
+
+**Parameters:**
+- `query` (required): Natural language research question. Detailed, full questions work best.
+- `outputType` (optional, default `"sourcedAnswer"`): `"sourcedAnswer"` returns an answer with sources; `"structured"` returns data matching `structuredOutputSchema`.
+- `structuredOutputSchema` (required when `outputType` is `"structured"`): A JSON Schema object describing the desired structured output.
+- `mode` (optional): `"answer"`, `"auto"`, `"investigate"`, or `"research"`. Use `"research"` for the most thorough investigation.
+- `reasoningDepth` (optional): `"S"`, `"M"`, `"L"`, or `"XL"`. Larger values increase depth and runtime.
+- `includeDomains` (optional): Array of domains to restrict results to.
+- `excludeDomains` (optional): Array of domains to exclude from results.
+- `fromDate` (optional): Only include content published on or after this date. Format `YYYY-MM-DD`.
+- `toDate` (optional): Only include content published on or before this date. Format `YYYY-MM-DD`.
+
+**Use cases:**
+- Comprehensive research reports and comparative analysis
+- Investigations that require synthesizing many sources
+- Complex questions where a quick search is insufficient
+
+### `linkup-get-research`
+
+Retrieve the current state of a research task started with `linkup-research`.
+
+**Parameters:**
+- `id` (required): The research task id returned by `linkup-research`.
+
+**Behavior:**
+- Returns the task object with its `status` (`pending`, `processing`, `completed`, `failed`).
+- While `pending`/`processing`, keep polling (roughly every 15-30 seconds) until a terminal state.
+- When `completed`, the result is in the `output` field; when `failed`, the reason is in the `error` field.
 
 ### `linkup-fetch`
 
