@@ -166,7 +166,7 @@ Once configured, you can ask your AI agent to search the web or fetch webpage co
 - "Research the current state of the semiconductor market, covering key dynamics, major players, recent analyst sentiment, and the bull and bear cases"
 - "Do a deep research report on how the EU AI Act affects early-stage startups"
 
-Research is a long-running operation (typically 5-20 minutes). The agent starts a task with `linkup-research`, then polls `linkup-get-research` with the returned task `id` until the status is `completed` or `failed`.
+Research is a long-running operation (typically several minutes). The agent starts a task with `linkup-research`, then polls `linkup-get-research` with the returned task `id` until the status is `completed` or `failed`.
 
 **Fetch Examples:**
 - "Fetch the content from https://example.com/article"

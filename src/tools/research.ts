@@ -8,7 +8,7 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
     'linkup-research',
     {
       description:
-        'Start a Linkup deep research task for complex, multi-source investigations that require analysis and synthesis across many sources. This is a long-running operation (typically 5-20 minutes): it does NOT return the final result. It immediately returns a task object with an "id" and a "status" (pending/processing). You MUST then call "linkup-get-research" with that id, polling roughly every 15-30 seconds, until the status becomes "completed" (read "output") or "failed" (read "error"). For quick, direct answers prefer "linkup-search" instead.',
+        'Start a Linkup deep research task for complex, multi-source investigations that require analysis and synthesis across many sources. This is a long-running operation: it does NOT return the final result. It immediately returns a task object with an "id" and a "status". Poll "linkup-get-research" with that id until the status becomes "completed" or "failed". When "completed", the result is in "output"; when "failed", the reason is in "error". For quick, direct answers prefer "linkup-search" instead.',
       inputSchema: {
         excludeDomains: z
           .array(z.string())
@@ -26,7 +26,7 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
           .array(z.string())
           .optional()
           .describe(
-            'A list of domains to restrict research results to, e.g. ["bbc.com", "reuters.com"]. Only results from these domains will be used.',
+            'A list of domains to restrict research results to, e.g. ["bbc.com", "reuters.com"]. Only results from these domains will be used. Max 100 domains.',
           ),
         mode: z
           .enum(['answer', 'auto', 'investigate', 'research'])
@@ -42,6 +42,7 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
           ),
         query: z
           .string()
+          .min(1)
           .describe(
             'Natural language research question. Detailed, full questions work best, e.g., "Research the current state of the semiconductor market, covering key dynamics, major players, recent analyst sentiment, and the bull and bear cases."',
           ),
@@ -77,34 +78,35 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
       mode,
       reasoningDepth,
     }) => {
-      if (outputType === 'structured' && !structuredOutputSchema) {
-        return {
-          content: [
-            {
-              text: 'structuredOutputSchema is required when outputType is "structured".',
-              type: 'text' as const,
-            },
-          ],
-          isError: true as const,
-        };
+      const base = {
+        excludeDomains,
+        fromDate,
+        includeDomains,
+        mode,
+        query,
+        reasoningDepth,
+        toDate,
+      };
+
+      let params: ResearchParams = { ...base, outputType: 'sourcedAnswer' };
+
+      if (outputType === 'structured') {
+        if (!structuredOutputSchema) {
+          return {
+            content: [
+              {
+                text: 'structuredOutputSchema is required when outputType is "structured".',
+                type: 'text' as const,
+              },
+            ],
+            isError: true as const,
+          };
+        }
+
+        params = { ...base, outputType, structuredOutputSchema };
       }
 
       return safeExecuteLinkupMethod(apiKey, async client => {
-        const base = {
-          excludeDomains,
-          fromDate: fromDate ? new Date(fromDate) : undefined,
-          includeDomains,
-          mode,
-          query,
-          reasoningDepth,
-          toDate: toDate ? new Date(toDate) : undefined,
-        };
-
-        const params: ResearchParams =
-          outputType === 'structured'
-            ? { ...base, outputType, structuredOutputSchema: structuredOutputSchema ?? {} }
-            : { ...base, outputType };
-
         const task = await client.research(params);
 
         return {
@@ -125,9 +127,12 @@ export function registerGetResearchTool(server: McpServer, apiKey: string) {
     'linkup-get-research',
     {
       description:
-        'Retrieve the current state of a Linkup research task previously started with "linkup-research". Returns the task object with its "status" (pending, processing, completed, failed). While the status is "pending" or "processing", keep polling (roughly every 15-30 seconds) until it reaches a terminal state. When "completed", the result is in the "output" field; when "failed", the reason is in the "error" field.',
+        'Retrieve the current state of a Linkup research task previously started with "linkup-research". Returns the task object with its "status". While the status is "pending" or "processing", keep polling until it reaches a terminal state. When "completed", the result is in the "output" field; when "failed", the reason is in the "error" field.',
       inputSchema: {
-        id: z.string().describe('The research task id returned by the "linkup-research" tool.'),
+        id: z
+          .string()
+          .min(1)
+          .describe('The research task id returned by the "linkup-research" tool.'),
       },
       title: 'Linkup research result (poll)',
     },
