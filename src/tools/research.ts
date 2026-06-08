@@ -1,5 +1,4 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { ResearchParams } from 'linkup-sdk';
 import { z } from 'zod';
 import { safeExecuteLinkupMethod } from '../client.js';
 
@@ -29,16 +28,10 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
             'A list of domains to restrict research results to, e.g. ["bbc.com", "reuters.com"]. Only results from these domains will be used. Max 100 domains.',
           ),
         mode: z
-          .enum(['answer', 'auto', 'investigate', 'research'])
+          .enum(['answer', 'investigate', 'research'])
           .optional()
           .describe(
-            'Controls how the research task operates. Use "research" for the most thorough multi-source investigation; "auto" lets Linkup decide.',
-          ),
-        outputType: z
-          .enum(['sourcedAnswer', 'structured'])
-          .default('sourcedAnswer')
-          .describe(
-            'The shape of the eventual result. "sourcedAnswer" returns an answer with sources. "structured" returns data matching the provided structuredOutputSchema.',
+            'Controls the type of investigation. Use "answer" for a precise, evidence-backed answer; "investigate" for a focused report on one subject; "research" for a structured report across many topics. Omit this to let Linkup classify the question.',
           ),
         query: z
           .string()
@@ -50,13 +43,7 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
           .enum(['S', 'M', 'L', 'XL'])
           .optional()
           .describe(
-            'How much reasoning effort the task should spend. Larger values ("L", "XL") increase depth and runtime.',
-          ),
-        structuredOutputSchema: z
-          .record(z.string(), z.unknown())
-          .optional()
-          .describe(
-            'A JSON Schema object describing the desired structured output. Required when outputType is "structured".',
+            'How much reasoning effort the task should spend. Defaults to "L" when omitted; larger values increase source coverage, cross-checking, output length, and runtime.',
           ),
         toDate: z.iso
           .date()
@@ -67,47 +54,18 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
       },
       title: 'Linkup deep research (start task)',
     },
-    async ({
-      query,
-      outputType,
-      structuredOutputSchema,
-      includeDomains,
-      excludeDomains,
-      fromDate,
-      toDate,
-      mode,
-      reasoningDepth,
-    }) => {
-      const base = {
-        excludeDomains,
-        fromDate,
-        includeDomains,
-        mode,
-        query,
-        reasoningDepth,
-        toDate,
-      };
-
-      let params: ResearchParams = { ...base, outputType: 'sourcedAnswer' };
-
-      if (outputType === 'structured') {
-        if (!structuredOutputSchema) {
-          return {
-            content: [
-              {
-                text: 'structuredOutputSchema is required when outputType is "structured".',
-                type: 'text' as const,
-              },
-            ],
-            isError: true as const,
-          };
-        }
-
-        params = { ...base, outputType, structuredOutputSchema };
-      }
-
+    async ({ query, includeDomains, excludeDomains, fromDate, toDate, mode, reasoningDepth }) => {
       return safeExecuteLinkupMethod(apiKey, async client => {
-        const task = await client.research(params);
+        const task = await client.research({
+          excludeDomains,
+          fromDate: fromDate ? new Date(fromDate) : undefined,
+          includeDomains,
+          mode,
+          outputType: 'sourcedAnswer',
+          query,
+          reasoningDepth,
+          toDate: toDate ? new Date(toDate) : undefined,
+        });
 
         return {
           content: [
