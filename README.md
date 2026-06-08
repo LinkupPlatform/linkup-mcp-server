@@ -208,10 +208,8 @@ Start a deep research task for complex, multi-source investigations that require
 
 **Parameters:**
 - `query` (required): Natural language research question. Detailed, full questions work best.
-- `outputType` (optional, default `"sourcedAnswer"`): `"sourcedAnswer"` returns an answer with sources; `"structured"` returns data matching `structuredOutputSchema`.
-- `structuredOutputSchema` (required when `outputType` is `"structured"`): A JSON Schema object describing the desired structured output.
-- `mode` (optional): `"answer"`, `"auto"`, `"investigate"`, or `"research"`. Use `"research"` for the most thorough investigation.
-- `reasoningDepth` (optional): `"S"`, `"M"`, `"L"`, or `"XL"`. Larger values increase depth and runtime.
+- `mode` (optional): `"answer"`, `"investigate"`, or `"research"`. Use `"answer"` for a precise, evidence-backed answer; `"investigate"` for a focused report on one subject; `"research"` for a structured report across many topics. Omit to let Linkup classify the question.
+- `reasoningDepth` (optional): `"S"`, `"M"`, `"L"`, or `"XL"`. Defaults to `"L"` when omitted; larger values increase source coverage, cross-checking, output length, and runtime.
 - `includeDomains` (optional): Array of domains to restrict results to.
 - `excludeDomains` (optional): Array of domains to exclude from results.
 - `fromDate` (optional): Only include content published on or after this date. Format `YYYY-MM-DD`.
