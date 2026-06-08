@@ -7,13 +7,13 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
     'linkup-research',
     {
       description:
-        'Start a Linkup deep research task for complex, multi-source investigations that require analysis and synthesis across many sources. This is a long-running operation: it does NOT return the final result. It immediately returns a task object with an "id" and a "status". Poll "linkup-get-research" with that id until the status becomes "completed" or "failed". When "completed", the result is in "output"; when "failed", the reason is in "error". For quick, direct answers prefer "linkup-search" instead.',
+        'Submits an autonomous Linkup research task: an agent that investigates the web to answer questions a single search query cannot resolve, returning a synthesized, cited answer. Use for verified answers to precise questions, focused investigations of a defined subject, or broad multi-angle reports. This is async and long-running (can take several minutes): it does not return the final result. It returns immediately with a task "id" and a "status" of "pending". Poll "linkup-get-research" with that id until the status is "completed" (result in "output") or "failed" (reason in "error"). For quick, direct answers prefer "linkup-search" instead.',
       inputSchema: {
         excludeDomains: z
           .array(z.string())
           .optional()
           .describe(
-            'A list of domains to exclude from research results, e.g. ["reddit.com", "quora.com"].',
+            'A list of domains to exclude from research results, e.g. ["reddit.com", "quora.com"]. Results from these domains will be filtered out.',
           ),
         fromDate: z.iso
           .date()
@@ -31,19 +31,19 @@ export function registerResearchTool(server: McpServer, apiKey: string) {
           .enum(['answer', 'investigate', 'research'])
           .optional()
           .describe(
-            'Controls the type of investigation. Use "answer" for a precise, evidence-backed answer; "investigate" for a focused report on one subject; "research" for a structured report across many topics. Omit this to let Linkup classify the question.',
+            'Controls the type of investigation; setting it explicitly is recommended. Use "answer" for a precise, evidence-backed answer, "investigate" for a focused report on one subject, or "research" for a structured report across many topics. Omit to let Linkup classify the question.',
           ),
         query: z
           .string()
           .min(1)
           .describe(
-            'Natural language research question. Detailed, full questions work best, e.g., "Research the current state of the semiconductor market, covering key dynamics, major players, recent analyst sentiment, and the bull and bear cases."',
+            'Natural language research question. Detailed, full questions work best, e.g., "Compare the 2024 cloud revenue growth of Microsoft, Amazon, and Google."',
           ),
         reasoningDepth: z
           .enum(['S', 'M', 'L', 'XL'])
           .optional()
           .describe(
-            'How much reasoning effort the task should spend. Defaults to "L" when omitted; larger values increase source coverage, cross-checking, output length, and runtime.',
+            'How much reasoning effort the task spends, trading latency for coverage. Use "S" for light coverage, "M" for balanced, "L" (default) for thorough, or "XL" for exhaustive.',
           ),
         toDate: z.iso
           .date()
@@ -85,7 +85,7 @@ export function registerGetResearchTool(server: McpServer, apiKey: string) {
     'linkup-get-research',
     {
       description:
-        'Retrieve the current state of a Linkup research task previously started with "linkup-research". Returns the task object with its "status". While the status is "pending" or "processing", keep polling until it reaches a terminal state, waiting 5-10 seconds between calls (polling faster than once per second is rate-limited). When "completed", the result is in the "output" field; when "failed", the reason is in the "error" field.',
+        'Retrieve the current state of a Linkup research task previously started with "linkup-research". Returns the task object with its "status". While the status is "pending" or "processing", keep polling every few seconds until it reaches a terminal state; polling faster than once per second is rate-limited. When "completed", the result is in the "output" field; when "failed", the reason is in the "error" field.',
       inputSchema: {
         id: z
           .string()

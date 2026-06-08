@@ -28,11 +28,11 @@
     },
     {
       "name": "linkup-research",
-      "description": "Start a long-running Linkup deep research task for complex, multi-source investigations. Returns a task id to poll with linkup-get-research."
+      "description": "Submits an autonomous Linkup research task for questions a single search query cannot resolve. Returns a task id to poll with linkup-get-research."
     },
     {
       "name": "linkup-get-research",
-      "description": "Retrieve the status and result of a Linkup research task started with linkup-research."
+      "description": "Retrieve the current state, status, and result of a Linkup research task started with linkup-research."
     },
     {
       "name": "linkup-fetch",

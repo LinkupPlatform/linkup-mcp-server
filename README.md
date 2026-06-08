@@ -163,8 +163,7 @@ Once configured, you can ask your AI agent to search the web or fetch webpage co
 - "Search for the latest stock price of NVIDIA"
 
 **Research Examples:**
-- "Research the current state of the semiconductor market, covering key dynamics, major players, recent analyst sentiment, and the bull and bear cases"
-- "Do a deep research report on how the EU AI Act affects early-stage startups"
+- "Compare the 2024 cloud revenue growth of Microsoft, Amazon, and Google."
 
 Research is a long-running operation (typically several minutes). The agent starts a task with `linkup-research`, then polls `linkup-get-research` with the returned task `id` until the status is `completed` or `failed`.
 
@@ -204,14 +203,14 @@ Search the web in real time using Linkup to retrieve current information, facts,
 
 ### `linkup-research`
 
-Start a deep research task for complex, multi-source investigations that require analysis and synthesis. This is asynchronous and long-running (typically 2-20 minutes): it returns immediately with a task `id` and `status` rather than the final result. Use `linkup-get-research` to poll for completion.
+Submits an autonomous Linkup research task: an agent that investigates the web to answer questions a single search query cannot resolve, returning a synthesized, cited answer. Use for verified answers to precise questions, focused investigations of a defined subject, or broad multi-angle reports. This is async and long-running (can take several minutes): it returns immediately with a task `id` and `status` rather than the final result. Use `linkup-get-research` to poll for completion.
 
 **Parameters:**
 - `query` (required): Natural language research question. Detailed, full questions work best.
-- `mode` (optional): `"answer"`, `"investigate"`, or `"research"`. Use `"answer"` for a precise, evidence-backed answer; `"investigate"` for a focused report on one subject; `"research"` for a structured report across many topics. Omit to let Linkup classify the question.
-- `reasoningDepth` (optional): `"S"`, `"M"`, `"L"`, or `"XL"`. Defaults to `"L"` when omitted; larger values increase source coverage, cross-checking, output length, and runtime.
-- `includeDomains` (optional): Array of domains to restrict results to.
-- `excludeDomains` (optional): Array of domains to exclude from results.
+- `mode` (optional): Controls the type of investigation. Use `"answer"` for a precise, evidence-backed answer, `"investigate"` for a focused report on one subject, or `"research"` for a structured report across many topics. Omit to let Linkup classify the question.
+- `reasoningDepth` (optional): How much reasoning effort the task spends, trading latency for coverage. Use `"S"` for light coverage, `"M"` for balanced, `"L"` (default) for thorough, or `"XL"` for exhaustive.
+- `includeDomains` (optional): Array of domains to restrict results to, e.g. `["bbc.com", "reuters.com"]`. Recommended; max 100 domains.
+- `excludeDomains` (optional): Array of domains to exclude from results, e.g. `["reddit.com", "quora.com"]`.
 - `fromDate` (optional): Only include content published on or after this date. Format `YYYY-MM-DD`.
 - `toDate` (optional): Only include content published on or before this date. Format `YYYY-MM-DD`.
 
@@ -229,7 +228,7 @@ Retrieve the current state of a research task started with `linkup-research`.
 
 **Behavior:**
 - Returns the task object with its `status` (`pending`, `processing`, `completed`, `failed`).
-- While `pending`/`processing`, keep polling (every 5-10 seconds; faster than once per second is rate-limited) until a terminal state.
+- While `pending`/`processing`, keep polling every few seconds until a terminal state; faster than once per second is rate-limited.
 - When `completed`, the result is in the `output` field; when `failed`, the reason is in the `error` field.
 
 ### `linkup-fetch`
