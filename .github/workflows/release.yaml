@@ -4,8 +4,13 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
 env:
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
@@ -23,6 +28,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "24.14.0"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
       - run: npm ci
       - run: npm run build:stdio
       - name: Build MCP Bundle
