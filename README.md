@@ -204,7 +204,7 @@ Search the web in real time using Linkup to retrieve current information, facts,
 
 ### `linkup-research`
 
-Start a deep research task for complex, multi-source investigations that require analysis and synthesis. This is asynchronous and long-running (typically 5-20 minutes): it returns immediately with a task `id` and `status` rather than the final result. Use `linkup-get-research` to poll for completion.
+Start a deep research task for complex, multi-source investigations that require analysis and synthesis. This is asynchronous and long-running (typically 2-20 minutes): it returns immediately with a task `id` and `status` rather than the final result. Use `linkup-get-research` to poll for completion.
 
 **Parameters:**
 - `query` (required): Natural language research question. Detailed, full questions work best.
@@ -229,7 +229,7 @@ Retrieve the current state of a research task started with `linkup-research`.
 
 **Behavior:**
 - Returns the task object with its `status` (`pending`, `processing`, `completed`, `failed`).
-- While `pending`/`processing`, keep polling (roughly every 15-30 seconds) until a terminal state.
+- While `pending`/`processing`, keep polling (every 5-10 seconds; faster than once per second is rate-limited) until a terminal state.
 - When `completed`, the result is in the `output` field; when `failed`, the reason is in the `error` field.
 
 ### `linkup-fetch`

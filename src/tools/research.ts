@@ -85,7 +85,7 @@ export function registerGetResearchTool(server: McpServer, apiKey: string) {
     'linkup-get-research',
     {
       description:
-        'Retrieve the current state of a Linkup research task previously started with "linkup-research". Returns the task object with its "status". While the status is "pending" or "processing", keep polling until it reaches a terminal state. When "completed", the result is in the "output" field; when "failed", the reason is in the "error" field.',
+        'Retrieve the current state of a Linkup research task previously started with "linkup-research". Returns the task object with its "status". While the status is "pending" or "processing", keep polling until it reaches a terminal state, waiting 5-10 seconds between calls (polling faster than once per second is rate-limited). When "completed", the result is in the "output" field; when "failed", the reason is in the "error" field.',
       inputSchema: {
         id: z
           .string()
