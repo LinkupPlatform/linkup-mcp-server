@@ -10,10 +10,10 @@ export function registerSearchTool(server: McpServer, apiKey: string) {
         'Search the web in real time using Linkup to retrieve current information, facts, and news from trusted sources. Use this tool for: real-time data (weather, stocks, sports scores, events), breaking news, current events, recent research, product information, up-to-date prices, schedules, and any information not available in your knowledge base. Returns comprehensive content from the most relevant sources.',
       inputSchema: {
         depth: z
-          .enum(['standard', 'deep'])
-          .default('standard')
+          .enum(['flash', 'fast', 'standard', 'deep'])
+          .default('fast')
           .describe(
-            'The search depth to perform. Use "standard" for queries with direct answers, "deep" for complex research requiring analysis across multiple sources.',
+            'Search depth. "flash": lowest latency (~hundreds of ms). "fast": higher-quality one-shot retrieval (~1s, recommended default). "standard": single-pass agentic search for multi-topic queries. "deep": multi-iteration search for maximum coverage and multi-hop workflows.',
           ),
         excludeDomains: z
           .array(z.string())
