@@ -10,9 +10,6 @@ permissions:
   pull-requests: write
   id-token: write
 
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
 jobs:
   run-tests:
     uses: ./.github/workflows/_run-tests.yaml
@@ -35,3 +32,5 @@ jobs:
       - name: Build MCP Bundle
         run: npm run build:mcpb
       - run: npm run semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
